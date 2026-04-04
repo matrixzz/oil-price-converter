@@ -295,7 +295,7 @@ function renderInput() {
                 <select id="citySelect" onchange="onCityChange()">
                     <option value="">-- 选择城市 --</option>
                     ${Object.entries(cityPrices).map(([k, v]) =>
-                        `<option value="${k}">${v.name} — $${v.price.toFixed(3)}/gal</option>`
+                        `<option value="${k}"${k === 'seattle' ? ' selected' : ''}>${v.name} — $${v.price.toFixed(3)}/gal</option>`
                     ).join('')}
                     <option value="custom">自定义价格</option>
                 </select>
