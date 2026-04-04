@@ -17,6 +17,7 @@ allowed-tools: Read Edit WebFetch Bash
    - 洛杉矶 (Los Angeles-Long Beach): `https://gasprices.aaa.com/?state=CA`
    - 纽约 (New York): `https://gasprices.aaa.com/?state=NY`
    - 华盛顿DC: `https://gasprices.aaa.com/?state=DC`
+   - 奥斯丁 (Austin-San Marcos): `https://gasprices.aaa.com/?state=TX`
 
    对每个页面，提取对应 **metro area** 的 Regular Unleaded 价格（不是州平均价）。CA 页面需同时提取旧金山和洛杉矶两个城市。
 
@@ -35,4 +36,4 @@ allowed-tools: Read Edit WebFetch Bash
 
 - 油价精度保持3位小数（如 5.602），与 AAA 网站一致
 - 如果某个城市的油价获取失败，保留原有数据并告知用户
-- WA 页面找 "Seattle-Bellevue-Everett"，CA 页面找 "San Francisco" 和 "Los Angeles-Long Beach"，NY 页面找 "New York" metro area，DC 页面找州平均价（DC 只有一个区域）
+- WA 页面找 "Seattle-Bellevue-Everett"，CA 页面找 "San Francisco" 和 "Los Angeles-Long Beach"，NY 页面找 "New York" metro area，DC 页面找州平均价（DC 只有一个区域），TX 页面找 "Austin-San Marcos"
