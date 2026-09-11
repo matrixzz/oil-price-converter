@@ -189,16 +189,16 @@
 const GALLON_TO_LITER = 3.78541;
 
 // Average gas prices (regular unleaded) for major US metro areas
-// Source: AAA Gas Prices (https://gasprices.aaa.com) — updated 2026-04-05
+// Source: AAA Gas Prices (https://gasprices.aaa.com) — updated 2026-09-10
 const cityPrices = {
-    seattle:  { name: "西雅图 Seattle",         price: 5.613, state: "WA" },
-    sanfran:  { name: "旧金山 San Francisco",    price: 6.074, state: "CA" },
-    la:       { name: "洛杉矶 Los Angeles",      price: 6.036, state: "CA" },
-    newyork:  { name: "纽约 New York",           price: 4.106, state: "NY" },
-    dc:       { name: "华盛顿DC Washington DC",  price: 4.276, state: "DC" },
-    austin:   { name: "奥斯丁 Austin",           price: 3.841, state: "TX" },
+    seattle:  { name: "西雅图 Seattle",         price: 5.680, state: "WA" },
+    sanfran:  { name: "旧金山 San Francisco",    price: 6.033, state: "CA" },
+    la:       { name: "洛杉矶 Los Angeles",      price: 5.945, state: "CA" },
+    newyork:  { name: "纽约 New York",           price: 4.452, state: "NY" },
+    dc:       { name: "华盛顿DC Washington DC",  price: 4.248, state: "DC" },
+    austin:   { name: "奥斯丁 Austin",           price: 3.899, state: "TX" },
 };
-const priceUpdateDate = "2026-04-05";
+const priceUpdateDate = "2026-09-10";
 
 let rates = { CNY: null, TWD: null };
 let region = 'cn'; // 'cn' or 'tw'
