@@ -10,11 +10,12 @@
 ## 数据源
 
 - **汇率**: 页面运行时通过 `open.er-api.com` API 实时获取 USD/CNY 汇率（备用: `exchangerate-api.com`）
-- **油价**: 静态写入 `index.html` 中的 `cityPrices` 对象，数据来自 [AAA Gas Prices](https://gasprices.aaa.com)，需手动更新
+- **美国油价**: 静态写入 `index.html` 中的 `cityPrices` 对象，数据来自 [AAA Gas Prices](https://gasprices.aaa.com)，需手动更新
+- **中国油价**: 静态写入 `index.html` 中的 `cnCityPrices` 对象（92号汽油），数据来自 [汽油价格网](http://www.qiyoujiage.com)，需手动更新
 
 ## 更新油价
 
-运行 `/update-gas-prices` 自动从 AAA 网站抓取最新数据并推送部署。
+运行 `/update-gas-prices` 自动从 AAA 和汽油价格网抓取最新数据并推送部署。
 
 ## 部署
 

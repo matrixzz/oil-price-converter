@@ -171,8 +171,9 @@
 
         <p class="footer">
             汇率数据来自 <a href="https://xe.com" target="_blank">xe.com</a> (通过 exchangerate.host)
-            <br>油价数据来自 <a href="https://gasprices.aaa.com" target="_blank">AAA Gas Prices</a>
-            <br>油价更新日期: <span id="updateDate"></span>
+            <br>美国油价来自 <a href="https://gasprices.aaa.com" target="_blank">AAA Gas Prices</a>
+            <br>中国油价来自 <a href="http://www.qiyoujiage.com" target="_blank">汽油价格网</a>
+            <br>油价更新日期: 美国 <span id="updateDate"></span> / 中国 <span id="cnUpdateDate"></span>
         </p>
     </div>
 
@@ -191,6 +192,17 @@ const cityPrices = {
     austin:   { name: "奥斯丁 Austin",           price: 3.899, state: "TX" },
 };
 const priceUpdateDate = "2026-09-10";
+
+// Chinese retail gas prices (92# gasoline, NDRC guided max retail price)
+// Source: 汽油价格网 (http://www.qiyoujiage.com) — updated 2026-09-11
+// Note: prices are set per province; 深圳 uses 广东 and 长沙 uses 湖南
+const cnCityPrices = {
+    beijing:  { name: "北京",            price: 8.09 },
+    shanghai: { name: "上海",            price: 8.05 },
+    shenzhen: { name: "深圳 (广东省价)",  price: 8.10 },
+    changsha: { name: "长沙 (湖南省价)",  price: 8.03 },
+};
+const cnPriceUpdateDate = "2026-09-11";
 
 const FALLBACK_RATE = 6.72;
 
@@ -271,6 +283,16 @@ function renderInput() {
     } else {
         section.innerHTML = `
             <div class="section">
+                <label>选择城市油价 (92号汽油)</label>
+                <select id="cnCitySelect" onchange="onCnCityChange()">
+                    <option value="">-- 选择城市 --</option>
+                    ${Object.entries(cnCityPrices).map(([k, v]) =>
+                        `<option value="${k}"${k === 'beijing' ? ' selected' : ''}>${v.name} — ¥${v.price.toFixed(2)}/升</option>`
+                    ).join('')}
+                    <option value="custom">自定义价格</option>
+                </select>
+            </div>
+            <div class="section" id="cnCustomInput" style="display:none;">
                 <label>输入中国油价 (人民币/升)</label>
                 <input type="number" id="localInput" step="0.01" min="0" placeholder="例如: 7.89" oninput="convert()">
             </div>
@@ -286,6 +308,13 @@ function onCityChange() {
     } else {
         customDiv.style.display = 'none';
     }
+    convert();
+}
+
+function onCnCityChange() {
+    const sel = document.getElementById('cnCitySelect');
+    document.getElementById('cnCustomInput').style.display =
+        sel.value === 'custom' ? 'block' : 'none';
     convert();
 }
 
@@ -321,9 +350,18 @@ function convert() {
         resultLabel.textContent = '美国油价';
         resultUnit.textContent = '美元/加仑 (USD/Gallon)';
 
-        const inp = document.getElementById('localInput');
-        if (inp && inp.value) {
-            const localPerLiter = parseFloat(inp.value);
+        let localPerLiter = null;
+        const sel = document.getElementById('cnCitySelect');
+        if (sel) {
+            if (sel.value && sel.value !== 'custom') {
+                localPerLiter = cnCityPrices[sel.value].price;
+            } else if (sel.value === 'custom') {
+                const inp = document.getElementById('localInput');
+                if (inp && inp.value) localPerLiter = parseFloat(inp.value);
+            }
+        }
+
+        if (localPerLiter && localPerLiter > 0) {
             const usdPerGallon = (localPerLiter * GALLON_TO_LITER) / rate;
             resultValue.textContent = usdPerGallon.toFixed(2);
         } else {
@@ -334,6 +372,7 @@ function convert() {
 
 // Init
 document.getElementById('updateDate').textContent = priceUpdateDate;
+document.getElementById('cnUpdateDate').textContent = cnPriceUpdateDate;
 renderInput();
 fetchRate();
 </script>
