@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>美国油价转换器 — 中国/台湾</title>
+    <title>美国油价转换器 — 中国</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -114,11 +114,8 @@
             display: flex;
             background: #f0f4ff;
             border-radius: 10px;
-            margin-bottom: 12px;
-            overflow: hidden;
-        }
-        .direction-toggle + .direction-toggle {
             margin-bottom: 24px;
+            overflow: hidden;
         }
         .direction-toggle button {
             flex: 1;
@@ -149,15 +146,10 @@
 <body>
     <div class="container">
         <h1>美国油价转换器</h1>
-        <p class="subtitle">USD/Gallon ⇄ CNY or TWD/Liter 实时转换</p>
+        <p class="subtitle">USD/Gallon ⇄ CNY/Liter 实时转换</p>
 
         <div class="rate-bar" id="rateBar">
             汇率加载中...
-        </div>
-
-        <div class="direction-toggle" id="regionToggle">
-            <button class="active" onclick="setRegion('cn')">中国大陆</button>
-            <button onclick="setRegion('tw')">台湾</button>
         </div>
 
         <div class="direction-toggle">
@@ -200,16 +192,10 @@ const cityPrices = {
 };
 const priceUpdateDate = "2026-09-10";
 
-let rates = { CNY: null, TWD: null };
-let region = 'cn'; // 'cn' or 'tw'
+const FALLBACK_RATE = 7.27;
+
+let rate = null;
 let direction = 'us2x';
-
-const regionConfig = {
-    cn: { currency: 'CNY', symbol: '元', label: '中国油价', unit: '元/升 (CNY/Liter)', inputLabel: '输入中国油价 (人民币/升)', fallback: 7.27 },
-    tw: { currency: 'TWD', symbol: 'NT$', label: '台湾油价', unit: 'NT$/升 (TWD/Liter)', inputLabel: '输入台湾油价 (新台币/升)', fallback: 32.5 },
-};
-
-function getRate() { return rates[regionConfig[region].currency]; }
 
 async function fetchRate() {
     const bar = document.getElementById('rateBar');
@@ -229,9 +215,8 @@ async function fetchRate() {
             } catch(e) {}
         }
 
-        if (data && data.CNY && data.TWD) {
-            rates.CNY = data.CNY;
-            rates.TWD = data.TWD;
+        if (data && data.CNY) {
+            rate = data.CNY;
             updateRateBar();
             bar.classList.remove('error');
             convert();
@@ -239,8 +224,7 @@ async function fetchRate() {
             throw new Error('无法获取汇率');
         }
     } catch (e) {
-        rates.CNY = regionConfig.cn.fallback;
-        rates.TWD = regionConfig.tw.fallback;
+        rate = FALLBACK_RATE;
         updateRateBar(true);
         convert();
     }
@@ -248,46 +232,25 @@ async function fetchRate() {
 
 function updateRateBar(isError) {
     const bar = document.getElementById('rateBar');
-    const cfg = regionConfig[region];
-    const rate = rates[cfg.currency];
     if (isError) {
-        bar.innerHTML = `汇率获取失败，使用参考汇率: <span>1 USD = ${rate} ${cfg.currency}</span>`;
+        bar.innerHTML = `汇率获取失败，使用参考汇率: <span>1 USD = ${rate} CNY</span>`;
         bar.classList.add('error');
     } else {
-        bar.innerHTML = `实时汇率 (xe.com 参考): <span>1 USD = ${rate.toFixed(4)} ${cfg.currency}</span>`;
+        bar.innerHTML = `实时汇率 (xe.com 参考): <span>1 USD = ${rate.toFixed(4)} CNY</span>`;
         bar.classList.remove('error');
     }
-}
-
-function setRegion(r) {
-    region = r;
-    document.querySelectorAll('#regionToggle button').forEach((btn, i) => {
-        btn.classList.toggle('active', (i === 0 && r === 'cn') || (i === 1 && r === 'tw'));
-    });
-    updateRateBar();
-    updateDirectionLabels();
-    renderInput();
-    convert();
 }
 
 function setDirection(dir) {
     direction = dir;
     document.getElementById('btnUS2X').classList.toggle('active', dir === 'us2x');
     document.getElementById('btnX2US').classList.toggle('active', dir === 'x2us');
-    updateDirectionLabels();
     renderInput();
     convert();
 }
 
-function updateDirectionLabels() {
-    const name = region === 'cn' ? '中国' : '台湾';
-    document.getElementById('btnUS2X').textContent = `美国 → ${name}`;
-    document.getElementById('btnX2US').textContent = `${name} → 美国`;
-}
-
 function renderInput() {
     const section = document.getElementById('inputSection');
-    const cfg = regionConfig[region];
     if (direction === 'us2x') {
         section.innerHTML = `
             <div class="section">
@@ -306,11 +269,10 @@ function renderInput() {
             </div>
         `;
     } else {
-        const placeholder = region === 'cn' ? '例如: 7.89' : '例如: 32.50';
         section.innerHTML = `
             <div class="section">
-                <label>${cfg.inputLabel}</label>
-                <input type="number" id="localInput" step="0.01" min="0" placeholder="${placeholder}" oninput="convert()">
+                <label>输入中国油价 (人民币/升)</label>
+                <input type="number" id="localInput" step="0.01" min="0" placeholder="例如: 7.89" oninput="convert()">
             </div>
         `;
     }
@@ -328,17 +290,15 @@ function onCityChange() {
 }
 
 function convert() {
-    const rate = getRate();
     if (!rate) return;
 
     const resultValue = document.getElementById('resultValue');
     const resultLabel = document.getElementById('resultLabel');
     const resultUnit = document.getElementById('resultUnit');
-    const cfg = regionConfig[region];
 
     if (direction === 'us2x') {
-        resultLabel.textContent = cfg.label;
-        resultUnit.textContent = cfg.unit;
+        resultLabel.textContent = '中国油价';
+        resultUnit.textContent = '元/升 (CNY/Liter)';
 
         let usdPerGallon = null;
         const sel = document.getElementById('citySelect');
