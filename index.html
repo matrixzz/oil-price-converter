@@ -182,27 +182,27 @@
 const GALLON_TO_LITER = 3.78541;
 
 // Average gas prices (regular unleaded) for major US metro areas
-// Source: AAA Gas Prices (https://gasprices.aaa.com) — updated 2026-09-10
+// Source: AAA Gas Prices (https://gasprices.aaa.com) — updated 2026-11-07
 const cityPrices = {
-    seattle:  { name: "西雅图 Seattle",         price: 5.680, state: "WA" },
-    sanfran:  { name: "旧金山 San Francisco",    price: 6.033, state: "CA" },
-    la:       { name: "洛杉矶 Los Angeles",      price: 5.945, state: "CA" },
-    newyork:  { name: "纽约 New York",           price: 4.452, state: "NY" },
-    dc:       { name: "华盛顿DC Washington DC",  price: 4.248, state: "DC" },
-    austin:   { name: "奥斯丁 Austin",           price: 3.899, state: "TX" },
+    seattle:  { name: "西雅图 Seattle",         price: 5.227, state: "WA" },
+    sanfran:  { name: "旧金山 San Francisco",    price: 5.799, state: "CA" },
+    la:       { name: "洛杉矶 Los Angeles",      price: 5.838, state: "CA" },
+    newyork:  { name: "纽约 New York",           price: 4.291, state: "NY" },
+    dc:       { name: "华盛顿DC Washington DC",  price: 4.275, state: "DC" },
+    austin:   { name: "奥斯丁 Austin",           price: 3.458, state: "TX" },
 };
-const priceUpdateDate = "2026-09-10";
+const priceUpdateDate = "2026-11-07";
 
 // Chinese retail gas prices (92# gasoline, NDRC guided max retail price)
-// Source: 汽油价格网 (http://www.qiyoujiage.com) — updated 2026-09-11
+// Source: 汽油价格网 (http://www.qiyoujiage.com) — updated 2026-11-07
 // Note: prices are set per province; 深圳 uses 广东 and 长沙 uses 湖南
 const cnCityPrices = {
-    beijing:  { name: "北京",            price: 8.09 },
-    shanghai: { name: "上海",            price: 8.05 },
-    shenzhen: { name: "深圳 (广东省价)",  price: 8.10 },
-    changsha: { name: "长沙 (湖南省价)",  price: 8.03 },
+    beijing:  { name: "北京",            price: 8.89 },
+    shanghai: { name: "上海",            price: 8.85 },
+    shenzhen: { name: "深圳 (广东省价)",  price: 8.91 },
+    changsha: { name: "长沙 (湖南省价)",  price: 8.83 },
 };
-const cnPriceUpdateDate = "2026-09-11";
+const cnPriceUpdateDate = "2026-11-07";
 
 const FALLBACK_RATE = 6.72;
 
